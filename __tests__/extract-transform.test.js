@@ -73,7 +73,7 @@ describe('extract-transform', () => {
     jest.unmock('remark-html');
   });
   
-  describe('convert', () => {
+  describe('convertFile', () => {
     const input = {
       data: {
         mockProcessError: false,
@@ -84,7 +84,7 @@ describe('extract-transform', () => {
     };
 
     test('markdown should succeed', () => {
-      return etModule.convert(input).then(result => {
+      return etModule.convertFile(input).then(result => {
         expect(result).toBeDefined();
         expect(result.output).toBeDefined();
         expect(result.output.data).toEqual(input.data.mockProcessResult);
@@ -98,8 +98,8 @@ describe('extract-transform', () => {
     test('markdown should fail', () => {
       input.data.mockProcessError = processError;
       
-      console.error('EXPECTED ERROR:\n');
-      return etModule.convert(input)
+      // console.error('EXPECTED ERROR:\n');
+      return etModule.convertFile(input)
         .then(result => {
           // console.log('@@@ result', result);
           throw new Error(`Should not have succeeded: ${require('util').inspect(result)}`);
@@ -117,7 +117,7 @@ describe('extract-transform', () => {
       input.ext = '.json';
       input.data = jsonData;
 
-      return etModule.convert(input).then(result => {
+      return etModule.convertFile(input).then(result => {
         expect(result).toBeDefined();
         expect(result.output).toBeDefined();
         expect(result.output.data).toEqual(jsonData);
@@ -131,7 +131,7 @@ describe('extract-transform', () => {
     test('passthru should succeed', () => {
       input.ext = 'unknown';
 
-      return etModule.convert(input).then(result => {
+      return etModule.convertFile(input).then(result => {
         expect(result).toBeDefined();
         expect(result.input).toEqual(input);
         expect(result.converted).toEqual(false);
@@ -161,7 +161,7 @@ describe('extract-transform', () => {
     });
 
     test('should fail', () => {
-      console.error('EXPECTED ERROR:\n');
+      // console.error('EXPECTED ERROR:\n');
       return etModule.downloadFile(drive, file).then(result => {
         throw new Error(`should not have succeeded: ${require('util').inspect(result)}`);
       }, err => {

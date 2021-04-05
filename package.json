@@ -1,29 +1,36 @@
 {
-  "name": "google-drive-folder",
-  "version": "0.1.0",
-  "description": "Get content from google drive as markdown or json (or passthru)",
+  "name": "@localnerve/google-drive-folder",
+  "version": "0.2.0",
+  "description": "Get files from google drive folder, convert markdown or json, passthru all others",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "pretest": "node -e 'try{require(\"fs\").symlinkSync(\"../lib\", \"./__tests__/lib\");}catch(e){}'",
-    "test": "cross-env GOOGLE_APPLICATION_CREDENTIALS=mock-credentials.json jest",
-    "privatetest": "node tmp/test.js"
+    "test": "jest",
+    "test:private": "node tmp/private-test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/localnerve/get-content.git"
+    "url": "git+https://github.com/localnerve/google-drive-folder.git"
   },
   "author": "Alex Grant (@localnerve)",
+  "maintainers": [
+    {
+      "name": "localnerve",
+      "email": "alex@localnerve.com",
+      "url": "https://github.com/localnerve"
+    }
+  ], 
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/localnerve/get-content/issues"
+    "url": "https://github.com/localnerve/google-drive-folder/issues"
   },
-  "homepage": "https://github.com/localnerve/get-content#readme",
+  "homepage": "https://github.com/localnerve/google-drive-folder#readme",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
     "@babel/register": "^7.13.14",
-    "cross-env": "^7.0.3",
+    "coveralls": "^3.1.0",
     "eslint": "^7.23.0",
     "jest": "^26.6.3",
     "prettier": "^2.2.1"
