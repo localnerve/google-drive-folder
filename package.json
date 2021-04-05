@@ -32,5 +32,8 @@
     "googleapis": "^70.0.0",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1"
+  },
+  "engines": {
+    "node": "12 - 14"
   }
 }
