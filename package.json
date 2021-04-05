@@ -1,0 +1,36 @@
+{
+  "name": "google-drive-folder",
+  "version": "0.1.0",
+  "description": "Get content from google drive as markdown or json (or passthru)",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "node -e 'try{require(\"fs\").symlinkSync(\"../lib\", \"./__tests__/lib\");}catch(e){}'",
+    "test": "cross-env GOOGLE_APPLICATION_CREDENTIALS=mock-credentials.json jest",
+    "privatetest": "node tmp/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/localnerve/get-content.git"
+  },
+  "author": "Alex Grant (@localnerve)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/localnerve/get-content/issues"
+  },
+  "homepage": "https://github.com/localnerve/get-content#readme",
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.13.10",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/register": "^7.13.14",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.23.0",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "googleapis": "^70.0.0",
+    "remark": "^13.0.0",
+    "remark-html": "^13.0.1"
+  }
+}
