@@ -4,7 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/%40localnerve%2Fgoogle-drive-folder.svg)](https://badge.fury.io/js/%40localnerve%2Fgoogle-drive-folder)
 ![Verify](https://github.com/localnerve/google-drive-folder/workflows/Verify/badge.svg)
-[![Coverage Status](https://img.shields.io/coveralls/localnerve/google-drive-folder.svg)](https://coveralls.io/r/localnerve/google-drive-folder?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/localnerve/google-drive-folder/badge.svg?branch=master)](https://coveralls.io/github/localnerve/google-drive-folder?branch=master)
 
 ## Conversions
 This library supplies conversions for markdown and json. All other file types are passed through without conversion.
