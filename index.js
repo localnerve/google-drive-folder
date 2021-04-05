@@ -11,24 +11,34 @@ import { writeToDirectory, createReadableStream } from './lib/load';
 /**
  * Google Drive Folder Extract, Transform, and Load.
  * Environment variable SVC_ACCT_CREDENTIALS is valid path to google credential file. 
- *  process.env.SVC_ACCT_CREDENTIALS
- *
+ * @env SVC_ACCT_CREDENTIALS
+ * Resolves to Readable object stream of objects 
+ *   { input: { data, name, ext }, output: { data, name, ext }, converted: Boolean }.
+ * 
  * @param {Object} googleDriveInfo - Google Drive information object.
  * @param {String} googleDriveInfo.folderId - The folderId of the drive to read from.
  * @param {String} googleDriveInfo.userId - The userId of the owner of the drive.
- * @param {Array} [googleDriveInfo.scopes] - The scopes required by the account owner, defaults to drive.readonly.
- * @param {Object} destinationInfo - Destination information object.
- * @param {String} destinationInfo.outputDirectory - The full path to the destination folder. Default undefined.
- * IF undefined, will return a ReadableStream.
+ * @param {Array} [googleDriveInfo.scopes] - The scopes required by the account owner, defaults to `drive.readonly`.
+ * @param {Object} [options] - Additional options.
+ * @param {String} [options.outputDirectory] - The path to the output folder. If defined, writes to directory instead of returning stream.
+ * @param {Function} [options.logger] - Logger function for error output.
  * @returns {Promise} ReadableStream, unless outputDirectory was supplied.
  */
-export default async function googleDriveETL(googleDriveInfo, destinationInfo) {
+export default async function googleDriveETL(googleDriveInfo, options = {}) {
   const { folderId, userId, scopes } = googleDriveInfo;
-  const { outputDirectory } = destinationInfo;
+  const { outputDirectory, logger = () => {} } = options;
   const readStream = !outputDirectory;
 
   const writer = writeToDirectory.bind(null, outputDirectory);
   const next = readStream ? createReadableStream : writer;
 
-  return extractTransform(folderId, userId, scopes).then(next);
+  let result;
+  try {
+    result = await extractTransform(folderId, userId, scopes).then(next); 
+  }
+  catch(e) {
+    logger(e);
+    throw e;
+  }
+  return result;
 }
