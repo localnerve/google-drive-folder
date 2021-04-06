@@ -1,7 +1,7 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "0.2.0",
-  "description": "Get files from google drive folder, convert markdown or json, passthru all others",
+  "version": "0.3.0",
+  "description": "Get files from a google drive folder, convert markdown or json, text/plain all others",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",

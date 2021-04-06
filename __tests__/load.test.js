@@ -2,75 +2,78 @@
  * test load functions.
  */
 /* eslint-env jest */
+const { mockLoad, unmockLoad, emulateError } = require('test/mocks');
 const path = require('path');
 require('@babel/register');
 
 describe('load', () => {
   let moduleLoad;
+  const dir = 'testDir';
+  const name = 'bing';
+  const ext = '.bang';
+  const data = 'muchmuchdata';
+
 
   beforeAll(() => {
-    jest.mock('fs', () => ({
-      promises: {
-        writeFile: (path, data) => {
-          return Promise.resolve({
-            path,
-            data
-          });
-        }
-      }
-    }));
+    mockLoad(jest);
     moduleLoad = require('../lib/load');
   });
 
   afterAll(() => {
-    jest.unmock('fs');
+    unmockLoad(jest);
   });
 
-  test('createReadableStream Readable events work as expected', done => {
-    const results = [{
-      id: 'one',
-      index: 0,
-    }, {
-      id: 'two',
-      index: 1
-    }];
-
-    let counter = 0;
-
-    Promise.resolve(moduleLoad.createReadableStream(results)).then(stream => {
-      expect(stream).toBeDefined();
-      expect(typeof stream.on).toEqual('function');
-
-      stream.on('data', obj => {
-        expect(obj).toEqual(results[counter]);
-        expect(obj.index).toEqual(counter);
-        counter++;
-      });
-      stream.on('end', () => {
-        expect(counter).toEqual(results.length);
-        done();
-      });
-      stream.on('error', err => {
-        done(err);
-      })
-    });
+  test('createObjectStream returns ObjectTransformStream', done => {
+    const stream = moduleLoad.createObjectStream(() => {});
+    expect(stream).toBeDefined();
+    expect(stream).toBeInstanceOf(moduleLoad.ObjectTransformStream);
+    done();
   });
   
-  test('writeToDirectory works as expected', () => {
-    const dir = 'testDir';
-    const name = 'bing';
-    const ext = '.bang';
-    const data = 'muchmuchdata';
+  test('createObjectStream composes with transformer', done => {
+    const mockData = 'mockData';
+    const mockTransformer = jest.fn(
+      passedData => {
+        expect(passedData).toEqual(mockData);
+        return Promise.resolve({});
+      }
+    );
 
-    return moduleLoad.writeToDirectory(dir, [{
+    const stream = moduleLoad.createObjectStream(mockTransformer);
+    stream._transform(mockData, '', () => {});
+
+    expect(mockTransformer.mock.calls.length).toEqual(1);
+    done();
+  });
+
+  test('writeToDirectory calls async writeFile', () => {
+    return moduleLoad.writeToDirectory(dir, ()=> {}, {
       output: { name, ext, data }
-    }]).then(results => {
-      expect(results).toBeDefined();
-      expect(results[0]).toBeDefined();
-
-      const result = results[0];
+    }).then(result => {
+      expect(result).toBeDefined;
       expect(result.path).toEqual(path.join(dir, `${name}${ext}`));
       expect(result.data).toEqual(data);
     });
-  });  
+  });
+
+  test('writeToDirectory fails as expected', done => {
+    let called = false;
+
+    function handleError(e, msg) {
+      called = true;
+      expect(e).toEqual(emulateError);
+      expect(msg).toContain(path.join(dir, `${name}${ext}`));
+      done();
+    }
+
+    moduleLoad.writeToDirectory(dir, handleError, {
+      output: { name, ext, data: emulateError }
+    });
+
+    setTimeout(() => {
+      if (!called) {
+        done(new Error('Did not call error handler in time'));
+      }
+    }, 200);
+  });
 });
