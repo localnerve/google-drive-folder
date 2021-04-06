@@ -1,12 +1,15 @@
 /**
- * Google Drive ETL.
+ * Google Drive Folder.
+ * 
+ * Download a google drive folder and stream it out.
+ * Convert markdown and json. passthru the rest.
+ * Write files to local directory if specified.
  * 
  * Copyright (c) 2021 Alex Grant (@localnerve), LocalNerve LLC
  * Private use for LocalNerve, LLC only. Unlicensed for any other use.
  */
 /* eslint-env node */
 import extractTransform from './lib/extract-transform';
-import { writeToDirectory, createReadableStream } from './lib/load';
 
 /**
  * Google Drive Folder Extract, Transform, and Load.
@@ -21,24 +24,11 @@ import { writeToDirectory, createReadableStream } from './lib/load';
  * @param {Array} [googleDriveInfo.scopes] - The scopes required by the account owner, defaults to `drive.readonly`.
  * @param {Object} [options] - Additional options.
  * @param {String} [options.outputDirectory] - The path to the output folder. If defined, writes to directory instead of returning stream.
- * @param {Function} [options.logger] - Logger function for error output.
  * @returns {Promise} ReadableStream, unless outputDirectory was supplied.
  */
-export default async function googleDriveETL(googleDriveInfo, options = {}) {
+export default async function googleDriveFolder(googleDriveInfo, options = {}) {
   const { folderId, userId, scopes } = googleDriveInfo;
-  const { outputDirectory, logger = () => {} } = options;
-  const readStream = !outputDirectory;
+  const { outputDirectory } = options;
 
-  const writer = writeToDirectory.bind(null, outputDirectory);
-  const next = readStream ? createReadableStream : writer;
-
-  let result;
-  try {
-    result = await extractTransform(folderId, userId, scopes).then(next); 
-  }
-  catch(e) {
-    logger(e);
-    throw e;
-  }
-  return result;
+  return await extractTransform(folderId, userId, scopes, outputDirectory);
 }
