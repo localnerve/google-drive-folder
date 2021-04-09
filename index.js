@@ -16,19 +16,20 @@ import extractTransform from './lib/extract-transform';
  * Environment variable SVC_ACCT_CREDENTIALS is valid path to google credential file. 
  * @env SVC_ACCT_CREDENTIALS
  * Resolves to Readable object stream of objects 
- *   { input: { data, name, ext }, output: { data, name, ext }, converted: Boolean }.
- * 
- * @param {Object} googleDriveInfo - Google Drive information object.
- * @param {String} googleDriveInfo.folderId - The folderId of the drive to read from.
- * @param {String} googleDriveInfo.userId - The userId of the owner of the drive.
- * @param {Array} [googleDriveInfo.scopes] - The scopes required by the account owner, defaults to `drive.readonly`.
+ *   { input, output, converted }.
+ *
+ * @param {String} folderId - The folderId of the drive to read from.
+ * @param {String} userId - The userId of the owner of the drive. 
  * @param {Object} [options] - Additional options.
- * @param {String} [options.outputDirectory] - The path to the output folder. If defined, writes to directory instead of returning stream.
+ * @param {Array}  [options.scopes] - The scopes required by the account owner, defaults to `drive.readonly`.
+ * @param {String} [options.fileQuery] - A query to filter the selection of files.
+ *   @see https://developers.google.com/drive/api/v3/ref-search-terms
+ * @param {Object} [options.exportMimeMap] - The mime-types to use for export conversions.
+ *   @see https://developers.google.com/drive/api/v3/ref-export-formats
+ * @param {String} [options.outputDirectory] - The path to the output folder. If defined, writes to directory during object stream.
+ * @param {Function} [options.transformer] - Function receives downloaded input, returns Promise resolves to output data.
  * @returns {Promise} ReadableStream, unless outputDirectory was supplied.
  */
-export default async function googleDriveFolder(googleDriveInfo, options = {}) {
-  const { folderId, userId, scopes } = googleDriveInfo;
-  const { outputDirectory } = options;
-
-  return await extractTransform(folderId, userId, scopes, outputDirectory);
+export default async function googleDriveFolder(folderId, userId, options = {}) {
+  return await extractTransform(folderId, userId, options);
 }

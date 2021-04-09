@@ -1,14 +1,14 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Get files from a google drive folder, convert markdown or json, text/plain all others",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "pretest": "node -e 'try{require(\"fs\").symlinkSync(\"../lib\", \"./__tests__/lib\");}catch(e){}'",
     "test": "jest",
-    "test:private-outdir": "node tmp/private-outdir.js",
-    "test:private-stream": "node tmp/private-stream.js"
+    "test:private-outdir": "node private/v0.4.0/private-outdir.js",
+    "test:private-stream": "node private/v0.4.0/private-stream.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
       "email": "alex@localnerve.com",
       "url": "https://github.com/localnerve"
     }
-  ], 
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/localnerve/google-drive-folder/issues"
@@ -37,9 +37,7 @@
     "prettier": "^2.2.1"
   },
   "dependencies": {
-    "googleapis": "^70.0.0",
-    "remark": "^13.0.0",
-    "remark-html": "^13.0.1"
+    "googleapis": "^70.0.0"
   },
   "engines": {
     "node": "12 - 14"
