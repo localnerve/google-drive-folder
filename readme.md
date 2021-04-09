@@ -21,6 +21,8 @@ The library exports an async `function` that takes two arguments and returns a p
 **Promise<Stream> GoogleDriveFolder (folderId, userId, Options)**
 
 ### Input Types
+For a more detailed explanation of input [start here](#input).
+
 ```
 folderId: String,
 userId: String,
