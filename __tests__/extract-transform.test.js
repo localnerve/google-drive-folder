@@ -25,78 +25,19 @@ describe('extract-transform', () => {
     unmockFs(jest);
     unmockExtractTransform(jest);
   });
-  
-  describe('convertFile', () => {
-    const input = {
-      data: {
-        mockProcessError: false,
-        mockProcessResult: 'somemarkdown'
-      },
-      name: 'mock',
-      ext: '.md'
-    };
-
-    test('markdown should succeed', () => {
-      return etModule.convertFile(input).then(result => {
-        expect(result).toBeDefined();
-        expect(result.output).toBeDefined();
-        expect(result.output.data).toEqual(input.data.mockProcessResult);
-        expect(result.output.name).toEqual(input.name);
-        expect(result.output.ext).toEqual('.html');
-        expect(result.converted).toEqual(true);
-        // console.log('@@@ convert result', result);
-      });
-    });
-    
-    test('markdown should fail', () => {
-      input.data.mockProcessError = processError;
-      
-      // console.error('EXPECTED ERROR:\n');
-      return etModule.convertFile(input)
-        .then(result => {
-          // console.log('@@@ result', result);
-          throw new Error(`Should not have succeeded: ${require('util').inspect(result)}`);
-        }, err => {
-          // input.data.mockProcessError = false;
-          expect(err).toEqual(processError);
-        })
-        .finally(() => {
-          input.data.mockProcessError = false;
-        });
-    });
-
-    test('json should succeed', () => {
-      const jsonData = JSON.stringify(input);
-      input.ext = '.json';
-      input.data = jsonData;
-
-      return etModule.convertFile(input).then(result => {
-        expect(result).toBeDefined();
-        expect(result.output).toBeDefined();
-        expect(result.output.data).toEqual(jsonData);
-        expect(result.output.ext).toEqual('.json');
-        expect(result.converted).toEqual(true);
-      }).then(() => {
-        input.data = JSON.parse(jsonData);
-      });
-    });
-
-    test('passthru should succeed', () => {
-      input.ext = 'unknown';
-
-      return etModule.convertFile(input).then(result => {
-        expect(result).toBeDefined();
-        expect(result.input).toEqual(input);
-        expect(result.converted).toEqual(false);
-      });
-    });
-  });
 
   describe('downloadFile', () => {
     const file = {
       id: '101010',
-      name: 'mockFile.mockExt'
+      name: 'mockFile.mockExt',
+      mimeType: 'some/type',
+      fullFileExtension: undefined
     };
+    /*
+    const exportMimeMap = {
+      'application/vnd.google-apps.document': 'text/plain'
+    };
+    */
     const drive = mockGoogleapis.google.drive();
 
     test('should succeed', () => {
@@ -126,13 +67,48 @@ describe('extract-transform', () => {
 
   describe('extractTransform', () => {
     let counter = 0;
+    const googDocsType = 'application/vnd.google-apps.document';
     const files = [{
       name: '0.passthru',
-      id: '123123123'
+      id: '123123123',
+      mimeType: 'some/type',
+      fullFileExtension: undefined
     }, {
       name: '1.passthru',
-      id: '456456456'
+      id: '456456456',
+      mimeType: 'some/type',
+      fullFileExtension: undefined
     }];
+    const binaryFiles = [{
+      name: '0.bin',
+      id: '567567567',
+      mimeType: 'application/octet-stream',
+      fullFileExtension: 'bin'
+    }, {
+      name: '1.bin',
+      id: '789789789',
+      mimeType: 'application/octet-stream',
+      fullFileExtension: 'bin'
+    }];
+    const filesWithMimeTypes = [{
+      name: '0.doc',
+      id: '234234234',
+      mimeType: googDocsType
+    }, {
+      name: '1.bin',
+      id: '345345345',
+      mimeType: 'image/jpeg'
+    }, {
+      name: '1.doc',
+      id: '012012012',
+      mimeType: googDocsType
+    }];
+
+    const docsType = googDocsType;
+
+    function filterByType(type, files) {
+      return files.filter(file => file.mimeType.includes(type));
+    }
 
     test('should return stream', () => {
       mockOn.skipError = true;
@@ -153,6 +129,8 @@ describe('extract-transform', () => {
             expect(obj).toHaveProperty('input.name');
             expect(obj).toHaveProperty('input.ext');
             expect(obj).toHaveProperty('input.data');
+            expect(obj).toHaveProperty('input.binary');
+            expect(obj).toHaveProperty('input.downloadMeta');
             expect(obj).toHaveProperty('output.name');
             expect(obj).toHaveProperty('output.ext');
             expect(obj).toHaveProperty('output.data');
@@ -177,6 +155,7 @@ describe('extract-transform', () => {
 
     test('should send data and write file when outputDirectory is specified', done => {
       function complete(e) {
+        mockWriteFile.mockClear();
         unmockFiles();
         done(e);
       }
@@ -184,14 +163,101 @@ describe('extract-transform', () => {
       mockWriteFile.mockClear();
 
       counter = 0;
-      etModule.extractTransform('123123', 'user@domain.dom', [], 'tmp/to/nowhere')
+      etModule.extractTransform('iMaFiLeIdOfSoMeKiNd', 'user@domain.dom', {
+        outputDirectory: 'tmp/to/nowhere'
+      })
         .then(stream => {
-          stream.on('data', () => {
+          stream.on('data', data => {
+            expect(data.input.binary).toBeFalsy();
+            expect(data.output.data).toEqual('myspecialtestchunk');
             counter++;
           });
           stream.on('end', () => {
             expect(counter).toEqual(files.length);
             expect(mockWriteFile.mock.calls.length).toEqual(files.length);
+            complete();
+          });
+          stream.on('error', e => {
+            complete(e);
+          });
+        });
+    });
+
+    test('should send Buffer if binary content', done => {
+      function complete(e) {
+        unmockFiles();
+        done(e);
+      }
+      mockFiles(binaryFiles);
+      counter = 0;
+      etModule.extractTransform('101010', 'user@domain.dom')
+        .then(stream => {
+          stream.on('data', data => {
+            expect(data.input.binary).toEqual(true);
+            expect(data.output.data).toBeInstanceOf(Buffer);
+            counter++;
+          });
+          stream.on('end', () => {
+            expect(counter).toEqual(binaryFiles.length);
+            complete();
+          });
+          stream.on('error', e => {
+            complete(e);
+          })
+        });
+    });
+
+    test('should filter files if fileQuery is specified', done => {
+      
+
+      function complete(e) {
+        unmockFiles();
+        done(e);
+      }
+
+      mockFiles(filesWithMimeTypes, filterByType.bind(null, docsType));
+
+      counter = 0;
+      etModule.extractTransform('imASimpleFolderId', 'owner@ofFolder.dom', {
+        fileQuery: `mimeType = "application/vnd.${docsType}"`
+      })
+        .then(stream => {
+          stream.on('data', () => {
+            counter++;
+          });
+          stream.on('end', () => {
+            expect(counter).toEqual(2); // only 2 google-apps.document in fileWithMimeTypes
+            complete();
+          });
+          stream.on('error', e => {
+            complete(e);
+          });
+        });
+    });
+
+    test('should run export if exportMimeMap', done => {
+      function complete(e) {
+        unmockFiles();
+        done(e);
+      }
+
+      const mimeType = 'text/plain';
+      mockFiles(filesWithMimeTypes, filterByType.bind(null, docsType));
+
+      counter = 0;
+      etModule.extractTransform('asdfasdfasdf', 'owner@folder.com', {
+        exportMimeMap: {
+          [googDocsType]: mimeType
+        }
+      })
+        .then(stream => {
+          stream.on('data', data => {
+            expect(data.output.downloadMeta.method).toEqual('export');
+            expect(data.output.downloadMeta.parameters.mimeType).toEqual(mimeType);
+            counter++;
+          });
+          stream.on('end', () => {
+            expect(counter).toEqual(2);
             complete();
           });
           stream.on('error', e => {

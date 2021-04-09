@@ -92,3 +92,6 @@ __tests__/lib
 
 # no tmp
 tmp
+
+# no private
+private
