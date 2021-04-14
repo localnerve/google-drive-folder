@@ -1,12 +1,14 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Get files from a google drive folder, convert markdown or json, text/plain all others",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "eslint .",
     "pretest": "node -e 'try{require(\"fs\").symlinkSync(\"../lib\", \"./__tests__/lib\");}catch(e){}'",
     "test": "jest",
+    "transpile": "rimraf ./dist && babel --out-dir ./dist index.js && babel --out-dir ./dist/lib ./lib",
+    "prepublishOnly": "npm run transpile",
     "test:private-outdir": "node private/v0.4.0/private-outdir.js",
     "test:private-stream": "node private/v0.4.0/private-stream.js"
   },
@@ -14,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/localnerve/google-drive-folder.git"
   },
-  "author": "Alex Grant (@localnerve)",
+  "author": "Alex Grant <alex@localnerve.com> (https://github.com/localnerve)",
   "maintainers": [
     {
       "name": "localnerve",
@@ -28,13 +30,15 @@
   },
   "homepage": "https://github.com/localnerve/google-drive-folder#readme",
   "devDependencies": {
+    "@babel/cli": "^7.13.14",
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
     "@babel/register": "^7.13.14",
     "coveralls": "^3.1.0",
     "eslint": "^7.23.0",
     "jest": "^26.6.3",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "googleapis": "^70.0.0"
