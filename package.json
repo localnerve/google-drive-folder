@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Get files from a google drive folder, convert markdown or json, text/plain all others",
   "main": "dist/index.js",
   "scripts": {

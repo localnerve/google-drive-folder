@@ -6,6 +6,7 @@ const path = require('path');
 const {
   mockExtractTransform, unmockExtractTransform, mockOn,
   mockFiles, unmockFiles, mockFs, unmockFs,
+  mockAuth, unmockAuth,
   emulateError, mockTestChunk, mockGoogleapis
 } = require('test/mocks');
 require('@babel/register');
@@ -183,6 +184,38 @@ describe('extract-transform', () => {
         });
     });
 
+    test('should use auth if supplied', done => {
+      function complete(e) {
+        unmockAuth();
+        done(e);
+      }
+
+      mockAuth(() => {
+        done(new Error('should have used supplied auth and not have called GoogleAuth'));
+      });
+
+      etModule.extractTransform('123456789', 'user@domain.dom', {
+        auth: () => {}
+      }).then(() => {
+        complete();
+      }).catch(complete);
+    });
+
+    test('should use GoogleAuth if no auth supplied', done => {
+      function complete(e) {
+        unmockAuth();
+        done(e);
+      }
+
+      mockAuth(() => {
+        complete();
+      });
+
+      etModule.extractTransform('123456789', 'user@domain.dom')
+        .then(() => {})
+        .catch(complete);
+    });
+
     test('should send Buffer if binary content', done => {
       function complete(e) {
         unmockFiles();
@@ -208,8 +241,6 @@ describe('extract-transform', () => {
     });
 
     test('should filter files if fileQuery is specified', done => {
-      
-
       function complete(e) {
         unmockFiles();
         done(e);
