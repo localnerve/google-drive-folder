@@ -1,27 +1,59 @@
 # google-drive-folder
 
-> Downloads files from a google drive folder and returns as a stream
+> Streams files from a google drive folder
 
 [![npm version](https://badge.fury.io/js/%40localnerve%2Fgoogle-drive-folder.svg)](https://badge.fury.io/js/%40localnerve%2Fgoogle-drive-folder)
 ![Verify](https://github.com/localnerve/google-drive-folder/workflows/Verify/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/localnerve/google-drive-folder/badge.svg?branch=master)](https://coveralls.io/github/localnerve/google-drive-folder?branch=master)
 
-## Conversions
+## Contents
++ [Overview](#overview)
+  + [Why](#why-this-exists)
+  + [Authentication and Authorization](#authentication-and-authorization)
+  + [Conversions](#conversions)
++ [API](#api)
+  + [Input Types](#input)
+  + [Output Stream](#output)
+    + [Stream Data Format](#stream-data-format)
++ [Input Detail](#input-detail)
+  + [Google Drive Parameters](#google-drive-parameters)
+  + [Options](#options)
+    + [Conversion Options](#conversion-options)
+      + [Transformer Function](#transformer-function)
+        + [Transformer Input Object](#transformer-input-object)
+        + [Transformer Example](#transformer-example)
++ [Example Usage](#example-usage)
+  + [Example Minimal Usage](#code-example-using-minimal-options)
+  + [Example with Most Options](#code-example-using-most-options)
++ [MIT License](#license)
+
+## Overview
+This library streams files from a google drive folder, and applies conversions (if desired).
+
+### Why This Exists
+
+I wrote this library to codify my solution to a painful experience in which [403](https://en.wikipedia.org/wiki/HTTP_403) errors developed during larger folder downloads. This was initially puzzling (403 code not sufficient to understand the precise issue), but I solved it by serially streaming the files. The original problem must have been that I was making too many requests all at once over a very small time period, resulting in a 403 from the Google Drive service by policy.
+
+### Authentication and Authorization
+
+This library uses the [google api node client](https://github.com/googleapis/google-api-nodejs-client), and therefore requires credentials. By default, this library relies on Environment variable SVC_ACCT_CREDENTIALS to point to a valid Google service account credential file. Further, this credential must have the permissions to impersonate the user email passed in as `userId` for the folder `folderId`.
+
+However, If you have different requirements (OAuth2, JWT, etc), you can supply your own pre-resolved auth reference by passing [google auth](https://github.com/googleapis/google-auth-library-nodejs) as an 'auth' option. For more information, all options are [detailed here](#input-detail).
+
+### Conversions
+
 By default, no conversion occurs, data is just passed through as a Buffer (if binary) or a utf8 encoded string.
 To change this, supply a `transformer` function and an optional `exportMimeMap` if the source file on Google Drive is a Google Workspace file type (Docs, Spreadsheet, Presentation, Drawing, etc). These options are supplied using the [conversion options](#conversion-options).
 
-## Prerequisites
-
-This library relies on Environment variable SVC_ACCT_CREDENTIALS to point to a valid Google service account credential file. Further, this credential must have the permissions to impersonate the user email passed in as `userId` for the folder `folderId`.
-
 ## API
 
-The library exports an async `function` that takes two arguments and returns a promise.
+The library exports a `function` that takes two arguments and returns a promise.
 
 **Promise<Stream> GoogleDriveFolder (folderId, userId, Options)**
 
-### Input Types
-For a more detailed explanation of input [start here](#input).
+### Input
+
+A quick look at all the input and the types. All options are optional. For a more detailed explanation of input [skip to here](#input-detail).
 
 ```
 folderId: String,
@@ -30,11 +62,12 @@ userId: String,
   outputDirectory: String,
   scopes: Array<String>,
   fileQuery: String,
+  auth: GoogleAuth | OAuth2Client | JWT | String, 
   exportMimeMap: Object<key:String, value:String>,
   transformer: Function
 ```
 
-### Return
+### Output
 
 The returned Promise resolves to a `Stream` in object mode to receive data objects for each downloaded file as it arrives.
 
@@ -63,12 +96,12 @@ The format of the data objects you will receive on `data` events:
 ```
 
 The `input` is data as downloaded from Google Drive.
-The `output` is data as converted by a `transformer`.
+The `output` is data as converted by a [transformer](#transformer-function).
 If no conversion occurs (`converted === false`), output is a referece to `input`.
 
-## Input
+## Input Detail
 
-**REQUIRED** `SVC_ACCT_CREDENTIALS` Environment variable must point to a valid Google Service Account credential file.
+`SVC_ACCT_CREDENTIALS` environment variable must point to a valid Google Service Account credential file **UNLESS** Auth is supplied using the `auth` option.
 
 ### Google Drive Parameters
 
@@ -80,9 +113,10 @@ If no conversion occurs (`converted === false`), output is a referece to `input`
 All options are optional.
 
 * `[Options]` {Object} - The general options object.
-* `[Options.outputDirectory]` {String} - Absolute path to the output directory. Defaults to falsy. If supplied, files are written out as data arrives. Does not touch the directory other than to write files. The directory must already exist.
 * `[Options.scopes]` {Array<String>} - Scopes to use for auth (if required) in a special case. Defaults to the `drive.readonly` scope.
 * `[Options.fileQuery]` {String} - A file query string used to filter files to download by specific characteristics. Defaults to downloading all files in the `folderId` that are NOT deleted (`trashed = false`). @see [file reference search terms](https://developers.google.com/drive/api/v3/ref-search-terms).
+* `[Options.auth]` {GoogleAuth | OAuth2Client | JWT | String} - Given directly to the Google Drive NodeJS Api using its `auth` option. Use this option to override the default behavior of this library deferring to the `SVC_ACCT_CREDENTIALS` environment variable for a path to a service account credential file.
+* `[Options.outputDirectory]` {String} - Absolute path to the output directory. Defaults to falsy. If supplied, files are written out as data arrives. Does not touch the directory other than to write files. The directory must already exist.
 
 #### Conversion Options
 
@@ -109,7 +143,7 @@ A supplied `transformer` function receives a single object from the download of 
 }
 ```
 
-###### Tranformer Example
+###### Transformer Example
 This example downloads all files from the given Google Drive Folder.
 It presumes they are all Google Workspace GoogleDocs files that are markdown documents.
 Downloads them as `text/plain`, converts them to 'html', and outputs the result to the stream.
@@ -219,9 +253,9 @@ try {
 }
 ```
 
-### Code Example using all possible options
+### Code Example using most options
 
-All the prerequisites and possible arguments as code:
+All the prerequisites and possible arguments as code (except for `auth` option):
 
 ```js
 import googleDriveFolder from '@localnerve/google-drive-folder';
@@ -266,4 +300,4 @@ try {
 
 ## LICENSE
 
-* [MIT 2021, Alex Grant, LocalNerve, LLC](license.md)
+* [MIT, Alex Grant, LocalNerve, LLC](license.md)
