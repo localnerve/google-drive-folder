@@ -47,9 +47,12 @@ To change this, supply a `transformer` function and an optional `exportMimeMap` 
 
 ## API
 
-The library exports a `function` that takes two arguments and returns a promise.
+The library exports a single function that returns a Promise that resolves to a Stream.  
+Here's the signature:
 
-**Promise<Stream> GoogleDriveFolder (folderId, userId, Options)**
+```
+Promise<Stream> GoogleDriveFolder (folderId, userId, Options)
+```
 
 ### Input
 
