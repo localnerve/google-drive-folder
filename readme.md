@@ -109,7 +109,7 @@ If no conversion occurs (`converted === false`), output is a referece to `input`
 ### Google Drive Parameters
 
 * `folderId` {String} -  Uniquely identifies your folder in the google drive service. Found on the web in the url.
-* `userId` {String} - The email address of the folder owner that SVC_ACCT_CREDENTIALS will impersonate.
+* `userId` {String} - The email address of the folder owner that SVC_ACCT_CREDENTIALS will impersonate. If you supply the `auth` option, this parameter is ignored.
 
 ### Options
 
@@ -118,7 +118,7 @@ All options are optional.
 * `[Options]` {Object} - The general options object.
 * `[Options.scopes]` {Array<String>} - Scopes to use for auth (if required) in a special case. Defaults to the `drive.readonly` scope.
 * `[Options.fileQuery]` {String} - A file query string used to filter files to download by specific characteristics. Defaults to downloading all files in the `folderId` that are NOT deleted (`trashed = false`). @see [file reference search terms](https://developers.google.com/drive/api/v3/ref-search-terms).
-* `[Options.auth]` {GoogleAuth | OAuth2Client | JWT | String} - Given directly to the Google Drive NodeJS Api using its `auth` option. Use this option to override the default behavior of this library deferring to the `SVC_ACCT_CREDENTIALS` environment variable for a path to a service account credential file.
+* `[Options.auth]` {GoogleAuth | OAuth2Client | JWT | String} - Given directly to the Google Drive NodeJS Client `auth` option. Use this option to override the default behavior of the `SVC_ACCT_CREDENTIALS` environment variable path to a service account credentials. This will also cause the `userId` parameter to be ignored.
 * `[Options.outputDirectory]` {String} - Absolute path to the output directory. Defaults to falsy. If supplied, files are written out as data arrives. Does not touch the directory other than to write files. The directory must already exist.
 
 #### Conversion Options
