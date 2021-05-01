@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Get files from a google drive folder, convert markdown or json, text/plain all others",
   "main": "dist/index.js",
   "scripts": {
@@ -31,7 +31,6 @@
   "homepage": "https://github.com/localnerve/google-drive-folder#readme",
   "devDependencies": {
     "@babel/cli": "^7.13.14",
-    "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
     "@babel/register": "^7.13.14",
     "coveralls": "^3.1.0",
