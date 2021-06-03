@@ -285,7 +285,7 @@ const options = {
 
 try {
   // Blocks until object flow begins
-  const stream = await googleDriveFolder(googleDriveInfo, options);
+  const stream = await googleDriveFolder(folderId, userId, options);
   stream.on('data', data => {
     console.log(`Received a data object for '${data.input.name}'`, data);
   });
