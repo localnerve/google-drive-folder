@@ -1,1 +1,5 @@
 __tests__/lib
+coverage
+dist
+private
+tmp
