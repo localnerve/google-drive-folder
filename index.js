@@ -5,8 +5,8 @@
  * Convert markdown and json. passthru the rest.
  * Write files to local directory if specified.
  * 
- * Copyright (c) 2021 Alex Grant (@localnerve), LocalNerve LLC
- * Private use for LocalNerve, LLC only. Unlicensed for any other use.
+ * Copyright (c) 2021 - 2022 Alex Grant (@localnerve), LocalNerve LLC
+ * Licensed under the MIT license.
  */
 /* eslint-env node */
 import extractTransform from './lib/extract-transform';
