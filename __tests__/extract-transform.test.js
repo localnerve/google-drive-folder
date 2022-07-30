@@ -42,7 +42,7 @@ describe('extract-transform', () => {
       'application/vnd.google-apps.document': 'text/plain'
     };
     */
-    const drive = mockGoogleapis.google.drive();
+    const drive = mockGoogleapis.drive();
 
     test('should succeed', () => {
       mockOn.skipError = true;
