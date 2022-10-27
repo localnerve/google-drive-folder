@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Stream files from a Google Drive folder",
   "main": "dist/index.js",
   "exports": {
