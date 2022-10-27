@@ -2,11 +2,11 @@
   "root": true,
   "env": {
     "node": true,
-    "es2020": true
+    "es2022": true
   },
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 9
+    "ecmaVersion": "latest"
   },
   "extends": [
     "eslint:recommended"
