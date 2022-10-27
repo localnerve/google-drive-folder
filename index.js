@@ -9,7 +9,7 @@
  * Licensed under the MIT license.
  */
 /* eslint-env node */
-import extractTransform from './lib/extract-transform';
+import extractTransform from './lib/extract-transform.js';
 
 /**
  * Google Drive Folder Extract, Transform, and Load.
