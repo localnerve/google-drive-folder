@@ -1,7 +1,7 @@
 /**
  * Perform prepublishOnly build actions.
  * 
- * Copyright (c) 2021 - 2022 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2021 - 2023 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
 const fs = require('fs/promises');

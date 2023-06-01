@@ -5,7 +5,7 @@
  * Convert markdown and json. passthru the rest.
  * Write files to local directory if specified.
  * 
- * Copyright (c) 2021 - 2022 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2021 - 2023 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
 /* eslint-env node */
