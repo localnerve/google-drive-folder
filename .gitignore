@@ -90,6 +90,9 @@ sw.*
 # test symlink
 __tests__/lib
 
+# test-package node_modules
+test-package/node_modules
+
 # no tmp
 tmp
 

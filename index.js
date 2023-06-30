@@ -9,7 +9,7 @@
  * Licensed under the MIT license.
  */
 /* eslint-env node */
-import extractTransform from './lib/extract-transform.js';
+import { extractTransform } from './lib/extract-transform.js';
 
 /**
  * Google Drive Folder Extract, Transform, and Load.
@@ -33,3 +33,5 @@ import extractTransform from './lib/extract-transform.js';
 export default async function googleDriveFolder(folderId, userId, options = {}) {
   return await extractTransform(folderId, userId, options);
 }
+
+export { googleDriveFolder };
