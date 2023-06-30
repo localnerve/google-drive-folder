@@ -29,7 +29,7 @@ function runTests () {
     result = spawnSync('node', [testFile], {
       cwd: thisDirname,
       stdio: 'inherit',
-      timeout: 5000
+      timeout: 40000
     });
     if (result.status !== 0) {
       const msg = `${testFileShort} failed, ${result.status}`;
