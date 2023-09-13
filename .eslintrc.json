@@ -2,7 +2,7 @@
   "root": true,
   "env": {
     "node": true,
-    "es2022": true
+    "es2023": true
   },
   "parserOptions": {
     "sourceType": "module",

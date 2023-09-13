@@ -91,7 +91,7 @@ sw.*
 __tests__/lib
 
 # test-package node_modules
-test-package/node_modules
+__test-package__/node_modules
 
 # no tmp
 tmp
