@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "Stream files from a Google Drive folder",
   "main": "dist/index.js",
   "exports": {
@@ -16,9 +16,7 @@
     "test": "jest && npm run test-package",
     "transpile": "rimraf ./dist && babel --out-dir ./dist index.js && babel --out-dir ./dist/lib ./lib",
     "posttranspile": "node ./prepublishBuild.js",
-    "prepublishOnly": "npm run transpile",
-    "test:private-outdir": "node private/v0.4.0/private-outdir.js",
-    "test:private-stream": "node private/v0.4.0/private-stream.js"
+    "prepublishOnly": "npm run transpile"
   },
   "repository": {
     "type": "git",
@@ -38,20 +36,20 @@
   },
   "homepage": "https://github.com/localnerve/google-drive-folder#readme",
   "devDependencies": {
-    "@babel/cli": "^7.22.15",
-    "@babel/preset-env": "^7.22.15",
+    "@babel/cli": "^7.23.0",
+    "@babel/preset-env": "^7.23.2",
     "@babel/register": "^7.22.15",
-    "eslint": "^8.49.0",
+    "eslint": "^8.51.0",
     "jest": "^29.7.0",
     "prettier": "^3.0.3",
     "micromark": "^4.0.0",
     "micromark-extension-directive": "^3.0.0",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.5",
     "tar": "^6.2.0",
-    "glob": "^10.3.4"
+    "glob": "^10.3.10"
   },
   "dependencies": {
-    "@googleapis/drive": "^8.3.1"
+    "@googleapis/drive": "^8.4.0"
   },
   "engines": {
     "node": ">=18"
