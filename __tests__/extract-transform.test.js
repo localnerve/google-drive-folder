@@ -30,6 +30,11 @@ describe('extract-transform', () => {
     unmockExtractTransform(jest);
   });
 
+  beforeEach(() => {
+    mockOn.skipError = true;
+    mockOn.writeError = false;
+  });
+
   describe('downloadFile', () => {
     const file = {
       id: '101010',
@@ -45,26 +50,20 @@ describe('extract-transform', () => {
     const drive = mockGoogleapis.drive();
 
     test('should succeed', () => {
-      mockOn.skipError = true;
-
       return etModule.downloadFile(drive, file).then(result => {
         expect(result).toBeDefined();
         expect(result.name).toEqual(path.parse(file.name).name);
         expect(result.ext).toEqual(path.parse(file.name).ext);
         expect(result.data).toEqual(mockTestChunk);
-        // console.log('@@@ result', result);
-      }).finally(() => {
-        mockOn.skipError = false;
       });
     });
 
     test('should fail', () => {
-      // console.error('EXPECTED ERROR:\n');
+      mockOn.skipError = false;
       return etModule.downloadFile(drive, file).then(result => {
         throw new Error(`should not have succeeded: ${require('util').inspect(result)}`);
       }, err => {
         expect(err).toEqual(processError);
-        // console.log('@@@ successful fail', err);
       });
     });
   });
@@ -115,12 +114,52 @@ describe('extract-transform', () => {
     }
 
     test('should return stream', () => {
-      mockOn.skipError = true;
       return etModule.extractTransform('101010', 'user@domain.dom')
         .then(result => {
           expect(result).toBeDefined();
           expect(result).toBeInstanceOf(require('../lib/load').ObjectTransformStream);
         });
+    });
+
+    test('should throw on drive list failure', async () => {
+      let result;
+      function complete(e) {
+        unmockFiles();
+        return e;
+      }
+      mockFiles(files, null, true);
+
+      try {
+        await etModule.extractTransform('iMaFiLeIdOfSoMeKiNd', 'user@domain.dom', {
+          outputDirectory: 'tmp/to/nowhere'
+        });
+        result = complete(new Error('Should have thrown'));
+      }
+      catch (e) {
+        expect(e).toEqual(emulateError);
+        result = complete();
+      }
+
+      if (result) {
+        throw result;
+      }
+    });
+
+    test('should error on download failure', done => {
+      mockFiles(files, null, false, true);
+
+      etModule.extractTransform('iMaFiLeIdOfSoMeKiNd', 'user@domain.dom', {
+        outputDirectory: 'tmp/to/nowhere'
+      }).then(stream => {
+        stream.on('data', () => {
+          done(new Error('received unexpected data'));
+        });
+        stream.on('error', err => {
+          expect(err).toEqual(emulateError);
+          unmockFiles();
+          done();
+        });
+      });
     });
 
     test('should send data, correct structure, ref input on passthru', done => {
@@ -153,6 +192,28 @@ describe('extract-transform', () => {
           stream.on('error', err => {
             unmockFiles();
             done(err);
+          });
+        });
+    });
+
+    test('handle write errors', done => {
+      function complete() {
+        mockWriteFile.mockClear();
+        unmockFiles();
+        done();
+      }
+      mockOn.writeError = true;
+      mockFiles(files);
+      mockWriteFile.mockClear();
+
+      counter = 0;
+      etModule.extractTransform('iMaFiLeIdOfSoMeKiNd', 'user@domain.dom', {
+        outputDirectory: 'tmp/to/nowhere'
+      })
+        .then(stream => {
+          stream.on('error', e => {
+            expect(e).toEqual(emulateError);
+            complete();
           });
         });
     });
@@ -250,7 +311,6 @@ describe('extract-transform', () => {
       }
 
       mockFiles(filesWithMimeTypes, filterByType.bind(null, docsType));
-
       counter = 0;
       etModule.extractTransform('imASimpleFolderId', 'owner@ofFolder.dom', {
         fileQuery: `mimeType = "application/vnd.${docsType}"`
@@ -277,7 +337,6 @@ describe('extract-transform', () => {
 
       const mimeType = 'text/plain';
       mockFiles(filesWithMimeTypes, filterByType.bind(null, docsType));
-
       counter = 0;
       etModule.extractTransform('asdfasdfasdf', 'owner@folder.com', {
         exportMimeMap: {

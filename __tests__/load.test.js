@@ -70,7 +70,7 @@ describe('load', () => {
     }
 
     moduleLoad.writeToDirectory(dir, handleError, {
-      output: { name, ext, data: emulateError }
+      output: { name, ext, data: emulateError.message }
     });
 
     setTimeout(() => {
