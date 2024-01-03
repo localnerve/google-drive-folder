@@ -1,7 +1,7 @@
 /**
  * Setup the installed package and run different tests loading the package in different ways.
  *
- * Copyright (c) 2023 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2021 - 2024 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
 const { spawn, spawnSync } = require('node:child_process');
