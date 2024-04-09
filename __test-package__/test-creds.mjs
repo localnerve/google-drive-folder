@@ -20,7 +20,7 @@ async function setupPrivateEnv () {
     await fs.access(env_file_path);
     await fs.access(svc_acct_path);
     exists = true;
-  } catch (e) {} // eslint-disable-line
+  } catch {}
 
   if (exists) {
     const funcEnvJson = await fs.readFile(env_file_path);

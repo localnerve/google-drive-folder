@@ -53,7 +53,7 @@ describe('load', () => {
     return moduleLoad.writeToDirectory(dir, ()=> {}, {
       output: { name, ext, data }
     }).then(result => {
-      expect(result).toBeDefined;
+      expect(result).toBeDefined();
       expect(result.path).toEqual(path.join(dir, `${name}${ext}`));
       expect(result.data).toEqual(data);
     });

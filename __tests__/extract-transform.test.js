@@ -136,7 +136,7 @@ describe('extract-transform', () => {
         result = complete(new Error('Should have thrown'));
       }
       catch (e) {
-        expect(e).toEqual(emulateError);
+        expect(e).toEqual(emulateError); // eslint-disable-line
         result = complete();
       }
 
@@ -248,6 +248,7 @@ describe('extract-transform', () => {
         });
     });
 
+    /* eslint-disable jest/expect-expect */
     test('should use auth if supplied', done => {
       function complete(e) {
         unmockAuth();
@@ -279,6 +280,7 @@ describe('extract-transform', () => {
         .then(() => {})
         .catch(complete);
     });
+    /* eslint-enable jest/expect-expect */
 
     test('should send Buffer if binary content', done => {
       function complete(e) {
