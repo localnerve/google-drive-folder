@@ -1,7 +1,7 @@
 /**
  * test functions for the test suite
  * 
- * Copyright (c) 2021 - 2024 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2021 - 2025 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
 const assert = require('node:assert');

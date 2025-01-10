@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "7.9.4",
+  "version": "7.9.5",
   "description": "Stream files from a Google Drive folder",
   "main": "dist/index.js",
   "exports": {
@@ -51,7 +51,7 @@
     "micromark-extension-directive": "^3.0.2",
     "rimraf": "^6.0.1",
     "tar": "^7.4.3",
-    "glob": "^11.0.0"
+    "glob": "^11.0.1"
   },
   "dependencies": {
     "@googleapis/drive": "^8.14.0"
