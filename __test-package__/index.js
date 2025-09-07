@@ -4,7 +4,7 @@
  * Copyright (c) 2021 - 2025 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
-const { spawn, spawnSync } = require('node:child_process');
+const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const tar = require('tar');
@@ -15,7 +15,7 @@ const localNodeModulesPath = path.join(thisDirname, 'node_modules');
 /**
  * Run the package tests
  */
-function runTests () {
+async function runTests () {
   console.log('--- Run tests ---');
 
   const testGlob = path.join(thisDirname, 'test-*');
@@ -23,23 +23,35 @@ function runTests () {
   const testFiles = globSync(testGlob);
   let result;
   
-  testFiles.forEach(testFile => {
+  for (const testFile of testFiles) {
     const testFileShort = path.basename(testFile);
+
     console.log(`=== start ${testFileShort} ===`);
-    result = spawnSync('node', [testFile], {
-      cwd: thisDirname,
-      stdio: 'inherit',
-      timeout: 40000
+    console.warn(`GCP check will fail and emit a MetadataLookupWarning. It\'s fine.
+  https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts#L475
+  https://github.com/googleapis/gcp-metadata/blob/main/src/index.ts#L398`);
+    
+    await new Promise((resolve, reject) => {
+      // const testProc = spawn('node', ['--trace-warnings', testFile], {
+      const testProc = spawn('node', [testFile], {
+        cwd: thisDirname,
+        stdio: 'inherit',
+        timeout: 40000
+      });
+      testProc.on('error', reject);
+      testProc.on('close', code => {
+        if (code !== 0) {
+          const msg = `${testFileShort} failed, ${result.status}`;
+          console.error(msg);
+          errors.push(msg);
+          console.log(`=== ${testFileShort} FAIL ===`);
+        } else {
+          console.log(`=== ${testFileShort} OK ===`);
+        }
+        resolve();
+      });
     });
-    if (result.status !== 0) {
-      const msg = `${testFileShort} failed, ${result.status}`;
-      console.error(msg);
-      errors.push(msg);
-    } else {
-      console.log(`${testFileShort} success`);
-    }
-    console.log(`=== end ${testFileShort} ===`);
-  });
+  }
 
   if (errors.length > 0) {
     throw new Error(errors.join('\n'));
