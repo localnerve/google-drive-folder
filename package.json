@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "15.1.2",
+  "version": "16.0.0",
   "description": "Stream files from a Google Drive folder",
   "main": "dist/index.js",
   "exports": {
@@ -42,9 +42,9 @@
     "@babel/cli": "^7.28.3",
     "@babel/preset-env": "^7.28.5",
     "@babel/register": "^7.28.3",
-    "@eslint/js": "^9.39.1",
-    "eslint": "^9.39.1",
-    "eslint-plugin-jest": "^29.2.1",
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-jest": "^29.5.0",
     "globals": "^16.5.0",
     "jest": "^30.2.0",
     "prettier": "^3.7.4",
@@ -55,7 +55,7 @@
     "glob": "^13.0.0"
   },
   "dependencies": {
-    "@googleapis/drive": "^19.2.1"
+    "@googleapis/drive": "^20.0.0"
   },
   "engines": {
     "node": ">=20"
