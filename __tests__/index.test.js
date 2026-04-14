@@ -4,7 +4,6 @@
  * Copyright (c) 2021 - 2025 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
-/* eslint-env jest */
 const {
   mockStream, mockIndex, unmockIndex
 } = require('test/mocks');
