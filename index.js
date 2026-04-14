@@ -8,7 +8,6 @@
  * Copyright (c) 2021 - 2025 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
-/* eslint-env node */
 import { extractTransform } from './lib/extract-transform.js';
 
 /**
