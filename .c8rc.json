@@ -11,6 +11,7 @@
     "posttranspile.js"
   ],
   "reporter": [
+    "lcov",
     "text",
     "text-summary",
     "html"
