@@ -50,6 +50,11 @@
   "dependencies": {
     "@googleapis/drive": "^20.2.0"
   },
+  "overrides": {
+    "c8": {
+      "yargs": "^18.0.0"
+    }
+  },
   "engines": {
     "node": ">=22"
   }
