@@ -4,3 +4,7 @@ __test-package__
 coverage
 private
 tmp
+babel.config.js
+eslint.config.js
+posttranspile.js
+.nvmrc

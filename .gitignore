@@ -87,14 +87,13 @@ sw.*
 # macOS
 .DS_Store
 
-# test symlink
-__tests__/lib
 
 # test-package node_modules
 __test-package__/node_modules
 
 # no tmp
 tmp
+cjs
 
 # no private
 private

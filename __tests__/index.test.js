@@ -4,29 +4,30 @@
  * Copyright (c) 2021 - 2025 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
-const {
-  mockStream, mockIndex, unmockIndex
-} = require('test/mocks');
-
-require('@babel/register');
+import { describe, test, before, after, mock } from 'node:test';
+import assert from 'node:assert';
 
 describe('index', () => {
+  const mockStream = 'mockStream';
+  const extractTransformLib = import.meta.resolve('../lib/extract-transform.js');
   let indexModule;
 
-  beforeAll(() => {
-    mockIndex(jest);
-    indexModule = require('../index.js');
+  before(async () => {
+    mock.module(extractTransformLib, {
+      exports: {
+        extractTransform: () => Promise.resolve(mockStream)
+      }
+    });
+    indexModule = await import(`../index.js?version=${Date.now()}`);
   });
 
-  afterAll(() => {
-    unmockIndex(jest);
+  after(() => {
+    mock.restoreAll();
   });
 
   test('should return stream', () => {
-    // it does no arg checking
     return indexModule.default({}).then(result => {
-      expect(result).toBeDefined();
-      expect(result).toEqual(mockStream);
+      assert.strictEqual(result, mockStream);
     });
   });
 });

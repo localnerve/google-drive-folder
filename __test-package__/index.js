@@ -4,12 +4,11 @@
  * Copyright (c) 2021 - 2025 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
-const { spawn } = require('node:child_process');
-const fs = require('node:fs');
-const path = require('node:path');
-const tar = require('tar');
-const { globSync } = require('glob');
-const thisDirname = __dirname;
+import { spawn } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import * as tar from 'tar';
+const thisDirname = import.meta.dirname;
 const localNodeModulesPath = path.join(thisDirname, 'node_modules');
 
 /**
@@ -20,14 +19,13 @@ async function runTests () {
 
   const testGlob = path.join(thisDirname, 'test-*');
   const errors = [];
-  const testFiles = globSync(testGlob);
-  let result;
+  const testFiles = fs.globSync(testGlob);
   
   for (const testFile of testFiles) {
     const testFileShort = path.basename(testFile);
 
     console.log(`=== start ${testFileShort} ===`);
-    console.warn(`GCP check will fail and emit a MetadataLookupWarning. It\'s fine.
+    console.warn(`GCP check will fail and emit a MetadataLookupWarning. It's fine.
   https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts#L475
   https://github.com/googleapis/gcp-metadata/blob/main/src/index.ts#L398`);
     
@@ -41,7 +39,7 @@ async function runTests () {
       testProc.on('error', reject);
       testProc.on('close', code => {
         if (code !== 0) {
-          const msg = `${testFileShort} failed, ${result.status}`;
+          const msg = `${testFileShort} failed, code: ${code}`;
           console.error(msg);
           errors.push(msg);
           console.log(`=== ${testFileShort} FAIL ===`);
@@ -121,7 +119,7 @@ function extractTarPackage () {
   console.log('--- extract ---');
 
   const tarGlob = 'localnerve-google-drive-folder*';
-  const tarFileName = globSync(tarGlob)[0];
+  const tarFileName = fs.globSync(tarGlob)[0];
 
   // clean any existing local node_modules
   fs.rmSync(localNodeModulesPath, { force: true, recursive: true });
