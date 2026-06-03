@@ -22,9 +22,15 @@ export function mockFs (mock) {
   });
 
   mock.module('node:fs/promises', {
+    namedExports: {
+      writeFile: mockWriteFile
+    }
+    /*
+    Node 24+ only
     exports: {
       writeFile: mockWriteFile
     }
+    */
   });
 
   return mockWriteFile;
@@ -97,7 +103,11 @@ export const mockGoogleapis = {
 
 export function mockExtractTransform (mock) {
   mock.module('@googleapis/drive', {
+    namedExports: mockGoogleapis
+    /*
+    Node 24+ only
     exports: mockGoogleapis
+    */
   });
 }
 

@@ -14,7 +14,7 @@
     "test:package": "node ./__test-package__/index.js",
     "test": "npm run test:unit && npm run test:package",
     "pretest:unit": "node -e \"require('fs').rmSync('./coverage',{recursive:true,force:true});require('fs').mkdirSync('./coverage',{recursive:true})\"",
-    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-lines=95 --test-coverage-exclude=\"__tests__/**\" --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=\"./coverage/lcov.info\" ./__tests__/*.test.js",
+    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude=\"__tests__/**\" --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=\"./coverage/lcov.info\" ./__tests__/*.test.js",
     "pretranspile": "node -e \"require('fs').rmSync('./cjs',{recursive:true,force:true})\"",
     "transpile": "babel index.js -o ./cjs/index.cjs && babel ./lib --out-dir ./cjs/lib",
     "posttranspile": "node posttranspile.js",

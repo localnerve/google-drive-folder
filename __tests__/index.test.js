@@ -14,9 +14,16 @@ describe('index', () => {
 
   before(async () => {
     mock.module(extractTransformLib, {
+      defaultExport: {},
+      namedExports: {
+        extractTransform: () => Promise.resolve(mockStream)
+      }
+      /*
+      node 24+ only
       exports: {
         extractTransform: () => Promise.resolve(mockStream)
       }
+      */
     });
     indexModule = await import(`../index.js?version=${Date.now()}`);
   });
