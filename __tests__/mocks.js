@@ -88,17 +88,19 @@ function driveGet () {
   });
 }
 
+const googleDrive = {
+  files: {
+    export: driveGet,
+    get: driveGet,
+    list: driveList
+  }
+};
+
 export const mockGoogleapis = {
   auth: {
     GoogleAuth
   },
-  drive: () => ({
-    files: {
-      export: driveGet,
-      get: driveGet,
-      list: driveList
-    }
-  })
+  drive: () => googleDrive
 };
 
 export function mockExtractTransform (mock) {
