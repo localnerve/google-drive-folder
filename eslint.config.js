@@ -1,12 +1,11 @@
-const js = require('@eslint/js');
-const globals = require('globals');
-const jest = require('eslint-plugin-jest');
+import js from '@eslint/js';
+import globals from 'globals';
 
-module.exports = [{
+export default [{
   ignores: [
     '__tests__/lib/**',
     'coverage/**',
-    'dist/**',
+    'cjs/**',
     'private/**',
     '**/tmp/**'
   ]
@@ -28,13 +27,11 @@ module.exports = [{
     '__tests__/**',
     '__test-package__/**/*.{js,cjs}'
   ],
-  ...jest.configs['flat/recommended'],
   rules: {
-    ...jest.configs['flat/recommended'].rules,
-    'jest/no-done-callback': 'off'
+    ...js.configs.recommended.rules
   },
   languageOptions: {
-    sourceType: 'commonjs',
+    sourceType: 'module',
     globals: {
       ...globals.node
     }
@@ -43,7 +40,9 @@ module.exports = [{
   files: [
     '__test-package__/**/*.mjs'
   ],
-  ...jest.configs['flat/recommended'],
+  rules: {
+    ...js.configs.recommended.rules
+  },
   languageOptions: {
     sourceType: 'module',
     globals: {

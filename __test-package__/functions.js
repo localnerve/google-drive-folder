@@ -4,9 +4,9 @@
  * Copyright (c) 2021 - 2025 Alex Grant (@localnerve), LocalNerve LLC
  * Licensed under the MIT license.
  */
-const assert = require('node:assert');
+import assert from 'node:assert';
 
-async function testFn (fn, i) {
+export async function testFn (fn, i) {
   console.log(`=== testing ${fn.name}:${i} ===`);
   assert(typeof fn === 'function');
   let threw = false;
@@ -19,7 +19,3 @@ async function testFn (fn, i) {
   }
   assert(threw, 'default should have thrown default credentials error');  
 }
-
-module.exports = {
-  testFn
-};

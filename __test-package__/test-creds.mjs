@@ -15,12 +15,14 @@ async function setupPrivateEnv () {
   const svc_acct_path = path.resolve('../../localnerve-com/private/stage-localnerve-com-3bcd66ab3f20.json');
   const env_file_path = path.resolve('../../localnerve-com/private/stage-env-func.json');
 
-  let exists = false;
+  let exists;
   try {
     await fs.access(env_file_path);
     await fs.access(svc_acct_path);
     exists = true;
-  } catch {}
+  } catch {
+    exists = false;
+  }
 
   if (exists) {
     const funcEnvJson = await fs.readFile(env_file_path);

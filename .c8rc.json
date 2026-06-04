@@ -1,0 +1,28 @@
+{
+  "include": [
+    "*.js",
+    "lib/**"
+  ],
+  "exclude": [
+    "__tests__/**",
+    "__test-package__/**",
+    "babel.config.js",
+    "eslint.config.js",
+    "posttranspile.js"
+  ],
+  "reporter": [
+    "lcov",
+    "text",
+    "text-summary",
+    "html"
+  ],
+  "reports-dir": "./coverage",
+  "all": true,
+  "clean": true,
+
+  "check-coverage": true,
+  "lines": 95,
+  "functions": 95,
+  "branches": 90,
+  "statements": 95
+}
