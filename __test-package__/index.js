@@ -42,9 +42,11 @@ async function runTests () {
           const msg = `${testFileShort} failed, code: ${code}`;
           console.error(msg);
           errors.push(msg);
-          console.log(`=== ${testFileShort} FAIL ===`);
+          console.log(`=== ${testFileShort} ===`);
+          console.log('FAIL');
         } else {
-          console.log(`=== ${testFileShort} OK ===`);
+          console.log(`=== ${testFileShort} ===`);
+          console.log('OK');
         }
         resolve();
       });

@@ -4,7 +4,8 @@ export default {
       '@babel/preset-env', {
         targets: {
           node: '20'
-        }
+        },
+        "modules": "commonjs"
       }
     ]
   ]

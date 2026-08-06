@@ -14,9 +14,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # 7.0.1
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # 6.3.0
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # 7.0.0
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
@@ -24,7 +24,8 @@ jobs:
       run: npm run lint && npm test
     - name: Coverage Upload
       if: ${{ success() }}
-      uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45b # 2.3.6
+      uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # 2.3.8
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ./coverage/lcov.info
+        fail-on-error: false
