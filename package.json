@@ -53,6 +53,16 @@
   "dependencies": {
     "@googleapis/drive": "^21.0.0"
   },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/localnerve"
+    },
+    {
+      "type": "paypal",
+      "url": "https://www.paypal.com/ncp/payment/DHCB5GUYMGX5U"
+    }
+  ],
   "engines": {
     "node": ">=22"
   }
