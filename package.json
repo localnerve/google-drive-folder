@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "18.0.0",
+  "version": "18.0.1",
   "description": "Stream files from a Google Drive folder",
   "type": "module",
   "main": "./cjs/index.cjs",
@@ -44,8 +44,8 @@
     "@babel/preset-env": "^8.0.2",
     "@eslint/js": "^10.0.1",
     "c8": "^12.0.0",
-    "eslint": "^10.8.0",
-    "globals": "^17.9.0",
+    "eslint": "^10.8.1",
+    "globals": "^17.11.0",
     "micromark": "^4.0.2",
     "micromark-extension-directive": "^4.0.0",
     "tar": "^7.5.22"
