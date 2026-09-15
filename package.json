@@ -1,6 +1,6 @@
 {
   "name": "@localnerve/google-drive-folder",
-  "version": "19.0.0",
+  "version": "20.0.0",
   "description": "Stream files from a Google Drive folder",
   "type": "module",
   "main": "./cjs/index.cjs",
@@ -40,18 +40,18 @@
   },
   "homepage": "https://github.com/localnerve/google-drive-folder#readme",
   "devDependencies": {
-    "@babel/cli": "^8.0.4",
-    "@babel/preset-env": "^8.0.2",
+    "@babel/cli": "^8.0.5",
+    "@babel/preset-env": "^8.0.5",
     "@eslint/js": "^10.0.1",
     "c8": "^12.0.0",
-    "eslint": "^10.9.1",
+    "eslint": "^10.10.0",
     "globals": "^17.12.0",
     "micromark": "^4.0.2",
     "micromark-extension-directive": "^4.0.0",
     "tar": "^7.5.22"
   },
   "dependencies": {
-    "@googleapis/drive": "^25.0.0"
+    "@googleapis/drive": "^26.0.0"
   },
   "funding": [
     {
