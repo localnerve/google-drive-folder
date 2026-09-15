@@ -51,7 +51,7 @@
     "tar": "^7.5.22"
   },
   "dependencies": {
-    "@googleapis/drive": "^22.0.0"
+    "@googleapis/drive": "^25.0.0"
   },
   "funding": [
     {
